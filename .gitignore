@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Models: keep only the trained linear classifier (models/classifier.joblib).
+# Transformer weights are hundreds of MB (over GitHub's 100 MB limit); regenerate with finetune.py.
+models/transformer*/
+models/classifier_smoke.joblib
+models/classifier_bigram.joblib
+models/classifier_linear.joblib
+
+# Outputs / OS / editors
+fakereview_results.csv
+*.zip
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.streamlit/secrets.toml

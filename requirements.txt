@@ -1,0 +1,15 @@
+# core (everything runs with just these)
+numpy
+pandas
+scipy
+scikit-learn
+joblib
+streamlit
+altair
+
+# optional upgrades, picked up automatically when installed
+transformers      # GPT-2 perplexity, BART summaries, DeBERTa aspect sentiment, fine-tuning
+torch
+sentencepiece     # needed by the DeBERTa-v3 tokenizer
+protobuf
+vaderSentiment    # stronger rule-based sentiment than the built-in lexicon
