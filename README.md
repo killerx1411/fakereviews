@@ -113,7 +113,6 @@ fakereviews/
 ├── finetune.py                    Fine-tune a transformer classifier (GPU recommended)
 ├── requirements.txt               Dependencies (core + optional)
 ├── FINETUNING.md                  Step-by-step guide for fine-tuning on Google Colab
-├── docs/                          Colab screenshots used in this README
 ├── data/
 │   ├── fake_reviews_dataset.csv   Training data: 40k Amazon reviews, labelled OR / CG
 │   └── sample_product_reviews.csv Example product (Bluetooth speaker) for the demo
@@ -1029,15 +1028,15 @@ threshold moves). It equals the probability that a randomly chosen fake review g
 P(fake) than a randomly chosen genuine one. It measures **ranking quality independent of the
 threshold**. 0.5 = random, 1.0 = perfect.
 
-### Results on the test set
+### Ablation study
 
-| # | Model | Accuracy | F1 | ROC-AUC |
-|---|---|---|---|---|
-| 1 | Dense features only (22 features → LR) | 0.900 | 0.901 | 0.961 |
-| 2 | TF-IDF only (n-grams → LR) | 0.948 | 0.947 | 0.988 |
-| 3 | **TF-IDF + dense (full logistic regression)** | **0.959** | **0.960** | **0.993** |
-| 4 | **Fine-tuned DistilRoBERTa** | **0.975** | **0.976** | **0.999** |
-| 5 | **Ensemble: late fusion of 3 + 4** | **0.978** | **0.978** | **0.997** |
+| Model / Feature Setup | Accuracy | F1-Score | ROC-AUC |
+|---|---:|---:|---:|
+| **Dense features only (22)** | **0.900** | **0.901** | **0.961** |
+| **TF-IDF only** | **0.948** | **0.947** | **0.988** |
+| **TF-IDF + 22 dense features (Logistic Regression)** | **0.959** | **0.960** | **0.993** |
+| **Fine-tuned DistilRoBERTa** | **0.975** | **0.976** | **0.999** |
+| **Ensemble (TF-IDF + dense + DistilRoBERTa)** | **0.978** | **0.978** | **0.997** |
 
 ### Classification report (ensemble, threshold 0.5)
 
@@ -1076,8 +1075,8 @@ Approximate confusion matrix, reconstructed from the precision/recall above:
   - Most errors are genuine reviews flagged as fake (≈ 4.3 %). That only means a few real
     reviews are left out of the summary, which costs much less than letting fakes in.
   - The threshold slider can move this trade-off.
-- **Fine-tuning converged.** The training loss fell to ≈ 0.0001–0.0006 by the end of epoch 2
-  (screenshot below). The held-out test score of 97.5 % shows the model generalises rather
+- **Fine-tuning converged.** The training loss fell to ≈ 0.0001–0.0006 by the end of epoch 2.
+  The held-out test score of 97.5 % shows the model generalises rather
   than memorising.
 
 ### What the linear model learned (interpretability output)
@@ -1110,16 +1109,6 @@ highlight stop-word-only n-grams, because they explain nothing to a user.
 | `stopword_ratio` | +0.25 | many function words → fake |
 | `avg_sent_len` | −0.19 | long sentences → genuine |
 | `avg_word_len` | −0.18 | longer words → genuine |
-
-### Colab screenshots
-
-Fine-tuning (`finetune.py`): end of epoch 2 and the test score.
-
-![Fine-tuning log](docs/colab_finetune.jpg)
-
-Linear model, ablation, ensemble and classification report (`train.py --ablation --transformer models/transformer`):
-
-![Training and evaluation log](docs/colab_train_eval.jpg)
 
 > **Note on the shipped model.**
 > - These numbers come from the Colab run, where `--perplexity auto` picked **GPT-2**. GPT-2
